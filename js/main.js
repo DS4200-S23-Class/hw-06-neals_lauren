@@ -1,9 +1,14 @@
-const F_HEIGHT = 400;
-const F_WIDTH = 400;
+const F_HEIGHT = 500;
+const F_WIDTH = 500;
 const MARGINS = {left: 50, right: 50, top: 50, bottom: 50};
 
 const VIS_HEIGHT = F_HEIGHT - MARGINS.top - MARGINS.bottom;
 const VIS_WIDTH = F_WIDTH - MARGINS.left - MARGINS.right;
+
+// Creating color constant
+    const COLORS = d3.scaleOrdinal()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range(["green", "orange", "purple"]);
 
 
 function vis1() {
@@ -25,9 +30,6 @@ function vis1() {
               .domain([0,7])
               .range([VIS_HEIGHT,0])
 
-    const COLORS = d3.scaleOrdinal()
-        .domain(["setosa", "versicolor", "virginica"])
-        .range(["green", "orange", "purple"]);
 
     // add x-axis to vis
     FRAME1.append("g")
@@ -40,7 +42,7 @@ function vis1() {
             .call(d3.axisLeft(Y_SCALE).ticks(14));
 
 
-    // Use X_SCALE to plot our points
+    // Use X_SCALE and Y_SCALE to plot our points
     FRAME1.selectAll("points")  
         .data(data) // passed from .then  
         .enter()       
@@ -49,7 +51,7 @@ function vis1() {
           .attr("cy", (d) => { return (Y_SCALE(d.Petal_Length) + MARGINS.top); }) 
           .attr("r", 4)
           .attr("class", "point")  
-          .attr("id", (d) => { return d.id })  
+          .attr("id", (d) => { return ("(" + d.Sepal_Length + ", " + d.Petal_Length + ")"); }) 
           .style("fill", function(d) {return COLORS(d.Species); })
           .style("opacity", 0.5);
 
@@ -76,6 +78,8 @@ function vis1() {
 }
 
 vis1()
+
+/*--------------------------------------------------------------*/
 
 function vis2() {
   // frame for column 2
@@ -119,7 +123,7 @@ function vis2() {
           .attr("cy", (d) => { return (Y_SCALE(d.Petal_Width) + MARGINS.top); }) 
           .attr("r", 4)
           .attr("class", "point")
-          .attr("id", (d) => { return d.id })
+          .attr("id", (d) => { return ("(" + d.Sepal_Length + ", " + d.Petal_Length + ")"); })
           .style("fill", function(d) {return COLORS(d.Species); })
           .style("opacity", 0.5);
 
@@ -149,6 +153,8 @@ function vis2() {
 
 vis2()
 
+/*--------------------------------------------------------------*/
+
 function vis3() {
   // frame for column 3
   const FRAME3 = d3.select("#column3")
@@ -177,10 +183,6 @@ function vis3() {
     FRAME3.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (MARGINS.top) + ")")
             .call(d3.axisLeft(Y_SCALE).ticks(14));
-
-    const COLORS = d3.scaleOrdinal()
-        .domain(["setosa", "versicolor", "virginica"])
-        .range(["green", "orange", "purple"]);
 
     const COUNTER = d3.scaleOrdinal()
         .domain(["setosa", "versicolor", "virginica"])
