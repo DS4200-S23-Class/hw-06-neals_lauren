@@ -25,16 +25,9 @@ function vis1() {
               .domain([0,7])
               .range([VIS_HEIGHT,0])
 
-
-    // Use X_SCALE to plot our points
-    FRAME1.selectAll("points")  
-        .data(data) // passed from .then  
-        .enter()       
-        .append("circle")  
-          .attr("cx", (d) => { return (X_SCALE(d.x) + MARGINS.left); }) 
-          .attr("cy", (d) => { return (Y_SCALE(d.y) + MARGINS.top); }) 
-          .attr("r", 2)
-          .attr("class", "point");
+    const COLORS = d3.scaleOrdinal()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range(["green", "orange", "purple"]);
 
     // add x-axis to vis
     FRAME1.append("g")
@@ -45,6 +38,22 @@ function vis1() {
     FRAME1.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (MARGINS.top) + ")")
             .call(d3.axisLeft(Y_SCALE).ticks(14));
+
+
+    // Use X_SCALE to plot our points
+    FRAME1.selectAll("points")  
+        .data(data) // passed from .then  
+        .enter()       
+        .append("circle")  
+          .attr("cx", (d) => { return (X_SCALE(d.Sepal_Length) + MARGINS.left); }) 
+          .attr("cy", (d) => { return (Y_SCALE(d.Petal_Length) + MARGINS.top); }) 
+          .attr("r", 4)
+          .attr("class", "point")    
+          .style("fill", function(d) {return COLORS(d.Species); })
+          .style("opacity", 0.5);
+
+
+
   }) 
 }
 
@@ -69,6 +78,10 @@ function vis2() {
               .domain([0,3])
               .range([VIS_HEIGHT,0])
 
+    const COLORS = d3.scaleOrdinal()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range(["green", "orange", "purple"]);
+
     // add x-axis to vis
     FRAME2.append("g")
             .attr("transform", "translate(" + MARGINS.left+ "," + (VIS_HEIGHT + MARGINS.top) + ")")
@@ -78,6 +91,18 @@ function vis2() {
     FRAME2.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (MARGINS.top) + ")")
             .call(d3.axisLeft(Y_SCALE).ticks(14));
+
+    // Use X_SCALE to plot our points
+    FRAME2.selectAll("points")  
+        .data(data) // passed from .then  
+        .enter()       
+        .append("circle")  
+          .attr("cx", (d) => { return (X_SCALE(d.Sepal_Width) + MARGINS.left); }) 
+          .attr("cy", (d) => { return (Y_SCALE(d.Petal_Width) + MARGINS.top); }) 
+          .attr("r", 4)
+          .attr("class", "point")
+          .style("fill", function(d) {return COLORS(d.Species); })
+          .style("opacity", 0.5);
   }) 
 
 }
@@ -86,7 +111,7 @@ vis2()
 
 function vis3() {
   // frame for column 3
-  const FRAME2 = d3.select("#column3")
+  const FRAME3 = d3.select("#column3")
             .append("svg")
               .attr("height", F_HEIGHT)
               .attr("width", F_WIDTH)
@@ -104,14 +129,33 @@ function vis3() {
               .range([VIS_HEIGHT,0])
 
     // add x-axis to vis
-    FRAME2.append("g")
+    FRAME3.append("g")
             .attr("transform", "translate(" + MARGINS.left+ "," + (VIS_HEIGHT + MARGINS.top) + ")")
             .call(d3.axisBottom(X_SCALE).ticks(3));
 
     // add y-axis to vis
-    FRAME2.append("g")
+    FRAME3.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (MARGINS.top) + ")")
             .call(d3.axisLeft(Y_SCALE).ticks(14));
+
+
+
+    const COUNTER = d3.scaleOrdinal()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range([50, 50, 50]);
+
+
+    // plot points in bar graph
+    FRAME3.selectAll("bars")  
+        .data(data) 
+        .enter()       
+        .append("rect")  
+          .attr("x", (d) => { return (X_SCALE(d.Species) + MARGINS.left + 30); }) 
+          .attr("y", (d) => { return (Y_SCALE(COUNTER(d.Species)) + MARGINS.top); }) 
+          .attr("width", 50)
+          .attr("height", (d) => {return VIS_HEIGHT - Y_SCALE(COUNTER(d.Species))})
+          .attr("class", "bar")
+          .style("fill", "blue");
   })
 }
 
