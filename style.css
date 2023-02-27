@@ -1,0 +1,26 @@
+body {
+	font-family: Arial;
+}
+
+h1 {
+	color: black;
+	display: flex;
+	width: 100%:;
+	justify-content: center;
+	text-align: center;
+}
+
+.acknowledgements {
+	text-align: center;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	text-align: left;
+	flex-wrap: wrap;
+}
+
+.column {
+	width: 33.33%;
+}
