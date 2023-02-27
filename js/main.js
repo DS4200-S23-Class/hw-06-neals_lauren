@@ -48,11 +48,29 @@ function vis1() {
           .attr("cx", (d) => { return (X_SCALE(d.Sepal_Length) + MARGINS.left); }) 
           .attr("cy", (d) => { return (Y_SCALE(d.Petal_Length) + MARGINS.top); }) 
           .attr("r", 4)
-          .attr("class", "point")    
+          .attr("class", "point")  
+          .attr("id", (d) => { return d.id })  
           .style("fill", function(d) {return COLORS(d.Species); })
           .style("opacity", 0.5);
 
+    // highlight on mouseover
+    function handleMouseover(event, d) {
+      d3.select(this).style("opacity", ".7")
+        .style("stroke-width", "3")
+        .style("stroke", "red");
+    }
 
+     // unhighlight on mouseleave
+    function handleMouseleave(event, d) {
+      d3.select(this).style("opacity", ".5")
+        .style("stroke-width", "0");
+    }
+
+
+    // add event listeners to the frame
+    FRAME1.selectAll("circle")
+                      .on("mouseover", handleMouseover)
+                      .on("mouseleave", handleMouseleave);
 
   }) 
 }
@@ -101,10 +119,32 @@ function vis2() {
           .attr("cy", (d) => { return (Y_SCALE(d.Petal_Width) + MARGINS.top); }) 
           .attr("r", 4)
           .attr("class", "point")
+          .attr("id", (d) => { return d.id })
           .style("fill", function(d) {return COLORS(d.Species); })
           .style("opacity", 0.5);
-  }) 
 
+    // highlight on mouseover
+    function handleMouseover(event, d) {
+      d3.select(this).style("opacity", ".7")
+        .style("stroke-width", "3")
+        .style("stroke", "red");
+    }
+
+     // unhighlight on mouseleave
+    function handleMouseleave(event, d) {
+      d3.select(this).style("opacity", ".5")
+        .style("stroke-width", "0");
+    }
+
+
+    // add event listeners to the frame
+    FRAME2.selectAll("circle")
+                      .on("mouseover", handleMouseover)
+                      .on("mouseleave", handleMouseleave);
+
+
+
+  }) 
 }
 
 vis2()
@@ -138,7 +178,9 @@ function vis3() {
             .attr("transform", "translate(" + MARGINS.left + "," + (MARGINS.top) + ")")
             .call(d3.axisLeft(Y_SCALE).ticks(14));
 
-
+    const COLORS = d3.scaleOrdinal()
+        .domain(["setosa", "versicolor", "virginica"])
+        .range(["green", "orange", "purple"]);
 
     const COUNTER = d3.scaleOrdinal()
         .domain(["setosa", "versicolor", "virginica"])
@@ -155,7 +197,8 @@ function vis3() {
           .attr("width", 50)
           .attr("height", (d) => {return VIS_HEIGHT - Y_SCALE(COUNTER(d.Species))})
           .attr("class", "bar")
-          .style("fill", "blue");
+          .style("fill", function(d) {return COLORS(d.Species); })
+          .style("opacity", 0.5);
   })
 }
 
