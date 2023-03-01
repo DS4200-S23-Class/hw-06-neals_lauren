@@ -34,6 +34,8 @@ const FRAME3 = d3.select("#column3")
 let F1_points, F2_points, F3_bar; 
 let xVal, yVal;
 
+/*-----------------------PETAL VS SEPAL WIDTH----------------------------*/
+
 
 function vis1() {
 
@@ -56,8 +58,6 @@ function vis1() {
               .domain([0,7])
               .range([VIS_HEIGHT,0])
 
-
-
     // add x-axis to vis
     FRAME1.append("g")
             .attr("transform", "translate(" + MARGINS.left+ "," + (VIS_HEIGHT + MARGINS.top) + ")")
@@ -79,34 +79,14 @@ function vis1() {
           .attr("r", 4)
           .attr("class", "point")  
           .attr("id", (d) => { return ("(" + d.Sepal_Length + ", " + d.Petal_Length + ")"); }) 
-          .style("fill", function(d) {return COLORS(d.Species); })
-          .style("opacity", .5);
-
-    // highlight on mouseover
-    function handleMouseover(event, d) {
-      d3.select(this).style("opacity", ".7")
-        .style("stroke-width", "3")
-        .style("stroke", "red");
-    }
-
-     // unhighlight on mouseleave
-    function handleMouseleave(event, d) {
-      d3.select(this).style("opacity", ".5")
-        .style("stroke-width", "0");
-    }
-
-
-    // add event listeners to the frame
-    FRAME1.selectAll("circle")
-                      .on("mouseover", handleMouseover)
-                      .on("mouseleave", handleMouseleave);
+          .style("fill", function(d) {return COLORS(d.Species); });
 
   }) 
 }
 
 vis1()
 
-/*--------------------------------------------------------------*/
+/*-----------------------PETAL VS SEPAL LENGTH----------------------------*/
 
 function vis2() {
 
@@ -151,8 +131,7 @@ function vis2() {
           .attr("r", 4)
           .attr("class", "point")
           .attr("id", (d) => { return ("(" + d.Sepal_Length + ", " + d.Petal_Length + ")"); })
-          .style("fill", function(d) {return COLORS(d.Species); })
-          .style("opacity", 0.5);
+          .style("fill", function(d) {return COLORS(d.Species); });
 
   }) 
 
@@ -160,7 +139,7 @@ function vis2() {
 
 vis2()
 
-/*--------------------------------------------------------------*/
+/*------------------------BAR CHART-----------------------------*/
 
 function vis3() {
 
@@ -209,20 +188,19 @@ vis3()
 
 /*--------------------------------------------------------------*/
 
-
+// function to update chart
 function brushAndLink(event) {
 
   extent = event.selection;
-console.log(F2_points)
+
   F2_points.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
   F1_points.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
   F3_bar.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+ 
   }
 
-
-
+// function when brushed
 function isSelected(coords, cx, cy) {
-  console.log("test")
       let x0 = coords[0][0],
       x1 = coords[1][0],
       y0 = coords[0][1],
@@ -232,8 +210,8 @@ function isSelected(coords, cx, cy) {
     }
 
     
-  
-    FRAME2.call(d3.brush()
+// brushing and linking   
+FRAME2.call(d3.brush()
   .extent([[MARGINS.left, MARGINS.bottom], [VIS_WIDTH + MARGINS.left, VIS_HEIGHT + MARGINS.top]])
   .on("start brush", brushAndLink));
   

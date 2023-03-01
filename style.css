@@ -31,8 +31,29 @@ h3 {
 	align-items: center;
 }
 
-.brushed {
+.point {
+	opacity: .5;
 	stroke: orangered;
 	stroke-width: 1px;
-	opacity: 1.5;
 }
+
+rect {
+	fill-opacity: .5;
+	stroke-width: 1px;
+}
+
+
+.brushed {
+	opacity: 1 !important;
+	stroke: orangered;
+	stroke-width: 1px;
+
+}
+
+rect.brushed {
+	stroke: orangered;
+	stroke-width: 5px;
+
+}
+
+
