@@ -40,13 +40,22 @@ function vis1() {
   // read from scatter-data.csv
   d3.csv("data/iris.csv").then((data) => {
 
+    // Max of X
+    const MAX_X = d3.max(data, (d) => {return parseInt(d.Sepal_Length)});
+
+    // Max of Y
+    const MAX_Y = d3.max(data, (d) => {return parseInt(d.Petal_Length)});
+
+    // Scale function for X
     const X_SCALE = d3.scaleLinear()
               .domain([0, 8])
               .range([0, VIS_WIDTH])
 
+    // Scale function for Y
     const Y_SCALE = d3.scaleLinear()
               .domain([0,7])
               .range([VIS_HEIGHT,0])
+
 
 
     // add x-axis to vis
@@ -105,6 +114,12 @@ function vis2() {
   // read from scatter-data.csv
   d3.csv("data/iris.csv").then((data) => {
 
+    // Setting max of X and Y
+    const MAX_X2 = d3.max(data, (d) => {return parseInt(d.Petal_Length)});
+    const MAX_Y2 = d3.max(data, (d) => {return parseInt(d.Petal_Width)});
+
+
+    // Setting scales
     const xVal = d3.scaleLinear()
               .domain([0, 5])
               .range([0, VIS_WIDTH])
@@ -206,19 +221,30 @@ function brushAndLink() {
     y = yVal(d.Petal_Width) + MARGINS.top;
     var isSelected = x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
     F2_points.classed("brushed", function(d) {
-      return isSelected;
-    })
+      return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+    }
     F1_points.classed("brushed", function(d) {
-      return isSelected;
+      return isBrushed;
     })
 
     
   }
-}
+  
+
+
 
 FRAME2.call(d3.brush()
-  .extent([[0,0], [F_WIDTH, F_HEIGHT]])
+  .extent([[MARGINS.left, MARGINS.bottom], [VIS_WIDTH + MARGINS.left, VIS_HEIGHT + MARGINS.top]])
   .on("start brush", brushAndLink));
+
+FRAME1.call(d3.brush()
+  .extent([[MARGINS.left, MARGINS.bottom], [VIS_WIDTH + MARGINS.left, VIS_HEIGHT + MARGINS.top]])
+  .on("start brush", brushAndLink));
+
+
+
+
+
 
 /*
     // highlight on mouseover
