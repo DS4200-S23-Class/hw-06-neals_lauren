@@ -31,7 +31,7 @@ const FRAME3 = d3.select("#column3")
               .attr("width", F_WIDTH)
               .attr("class", "frame");
 
-let F1_points, F2_points; 
+let F1_points, F2_points, F3_bar; 
 let xVal, yVal;
 
 
@@ -70,8 +70,7 @@ function vis1() {
 
 
     // Use X_SCALE and Y_SCALE to plot our points
-    F1_points = FRAME1.append("g")
-        .selectAll("points")  
+    F1_points = FRAME1.selectAll("points")  
         .data(data) // passed from .then  
         .enter()       
         .append("circle")  
@@ -81,7 +80,7 @@ function vis1() {
           .attr("class", "point")  
           .attr("id", (d) => { return ("(" + d.Sepal_Length + ", " + d.Petal_Length + ")"); }) 
           .style("fill", function(d) {return COLORS(d.Species); })
-          .style("opacity", 0.5);
+          .style("opacity", .5);
 
     // highlight on mouseover
     function handleMouseover(event, d) {
@@ -120,11 +119,11 @@ function vis2() {
 
 
     // Setting scales
-    const xVal = d3.scaleLinear()
+    xVal = d3.scaleLinear()
               .domain([0, 5])
               .range([0, VIS_WIDTH])
 
-    const yVal = d3.scaleLinear()
+    yVal = d3.scaleLinear()
               .domain([0,3])
               .range([VIS_HEIGHT,0])
 
@@ -143,8 +142,7 @@ function vis2() {
             .call(d3.axisLeft(yVal).ticks(14));
 
     // Use X_SCALE to plot our points
-    F2_points = FRAME2.append('g')
-        .selectAll("points")  
+    F2_points = FRAME2.selectAll("points")  
         .data(data) // passed from .then  
         .enter()       
         .append("circle")  
@@ -193,7 +191,7 @@ function vis3() {
 
 
     // plot points in bar graph
-    FRAME3.selectAll("bars")  
+    F3_bar = FRAME3.selectAll("bars")  
         .data(data) 
         .enter()       
         .append("rect")  
@@ -211,60 +209,32 @@ vis3()
 
 /*--------------------------------------------------------------*/
 
-function brushAndLink() {
-  if(d3.event.selection) {
-    F2_points.attr("stroke", "none");
-    var [[x0, y0],[x1,y1]] = d3.event.selection;
 
-    // T/F based on if point is in selection
-    x = xVal(d.Sepal_Width) + MARGINS.left;
-    y = yVal(d.Petal_Width) + MARGINS.top;
-    var isSelected = x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
-    F2_points.classed("brushed", function(d) {
-      return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+function brushAndLink(event) {
+
+  extent = event.selection;
+console.log(F2_points)
+  F2_points.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+  F1_points.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+  F3_bar.classed("brushed", function(d) {return isSelected(extent, xVal(d.Sepal_Width) + MARGINS.left, yVal(d.Petal_Width) + MARGINS.top);});
+  }
+
+
+
+function isSelected(coords, cx, cy) {
+  console.log("test")
+      let x0 = coords[0][0],
+      x1 = coords[1][0],
+      y0 = coords[0][1],
+      y1 = coords[1][1];
+
+      return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1; 
     }
-    F1_points.classed("brushed", function(d) {
-      return isBrushed;
-    })
 
     
-  }
   
-
-
-
-FRAME2.call(d3.brush()
+    FRAME2.call(d3.brush()
   .extent([[MARGINS.left, MARGINS.bottom], [VIS_WIDTH + MARGINS.left, VIS_HEIGHT + MARGINS.top]])
   .on("start brush", brushAndLink));
-
-FRAME1.call(d3.brush()
-  .extent([[MARGINS.left, MARGINS.bottom], [VIS_WIDTH + MARGINS.left, VIS_HEIGHT + MARGINS.top]])
-  .on("start brush", brushAndLink));
-
-
-
-
-
-
-/*
-    // highlight on mouseover
-    function handleMouseover(event, d) {
-      d3.select(this).style("opacity", ".7")
-        .style("stroke-width", "3")
-        .style("stroke", "red");
-    }
-
-     // unhighlight on mouseleave
-    function handleMouseleave(event, d) {
-      d3.select(this).style("opacity", ".5")
-        .style("stroke-width", "0");
-    }
-
-
-    // add event listeners to the frame
-    FRAME2.selectAll("circle")
-                      .on("mouseover", handleMouseover)
-                      .on("mouseleave", handleMouseleave);
-*/
-
+  
 

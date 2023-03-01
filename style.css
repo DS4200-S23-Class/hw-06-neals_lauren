@@ -32,7 +32,7 @@ h3 {
 }
 
 .brushed {
-	opacity: 1;
 	stroke: orangered;
-	stroke-width: 2px;
+	stroke-width: 1px;
+	opacity: 1.5;
 }
