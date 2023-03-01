@@ -30,3 +30,9 @@ h3 {
 	width: 33.33%;
 	align-items: center;
 }
+
+.brushed {
+	opacity: 1;
+	stroke: orangered;
+	stroke-width: 2px;
+}
